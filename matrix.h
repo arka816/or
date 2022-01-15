@@ -10,7 +10,8 @@ vector<vector<float>> multiplyMatMat(vector<vector<float>> A, vector<vector<floa
     assert(nA == mB);
 
     vector<vector<float>> prod(mA, vector<float> (nB));
-    int i, j, k, sum;
+    int i, j, k;
+    float sum;
 
     for(i = 0; i < mA; i++){
         for(j = 0; j < nB; j++){
@@ -32,7 +33,8 @@ vector<float> multiplyMatVec(vector<vector<float>> A, vector<float> b){
     assert(nA == mB);
 
     vector<float> prod(mA, 0);
-    int i, j, sum;
+    int i, j;
+    float sum;
 
     for(i = 0; i < mA; i++){
         sum = 0;
@@ -43,6 +45,14 @@ vector<float> multiplyMatVec(vector<vector<float>> A, vector<float> b){
     }
 
     return prod;
+}
+
+float dot(vector<float> A, vector<float> B){
+    float sum = 0;
+    for(int i = 0; i < A.size(); i++){
+        sum += A[i] * B[i];
+    }
+    return sum;
 }
 
 vector<vector<float>> minor(vector<vector<float>> mat, int col){
@@ -86,11 +96,30 @@ float cofactor(vector<vector<float>> mat, int row, int col){
     return ((row + col) % 2 == 0 ? 1 : -1) * determinant(cofactor);
 }
 
+vector<vector<float>> transposeSq(vector<vector<float>> mat){
+    int m = mat.size(), n = mat[0].size();
+    assert(m == n);
+
+    float temp;
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < i; j++){
+            temp = mat[i][j];
+            mat[i][j] = mat[j][i];
+            mat[j][i] = temp;
+        }
+    }
+
+    return mat;
+}
+
 vector<vector<float>> inverse(vector<vector<float>> mat){
     int m = mat.size(), n = mat[0].size();
     assert(m == n);
     float det = determinant(mat);
-    assert(det != 0);
+
+    if(det == 0){
+        return {};
+    }
 
     vector<vector<float>> inv(m, vector<float> (n));
 
@@ -100,5 +129,5 @@ vector<vector<float>> inverse(vector<vector<float>> mat){
         }
     }
 
-    return inv;
+    return transposeSq(inv);
 }

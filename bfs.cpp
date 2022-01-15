@@ -39,7 +39,7 @@ void print2d(vector<vector<float>> A){
     }
 }
 
-vector<vector<float>> bfs(vector<vector<float>> A, vector<float> b, vector<float> c){
+vector<vector<float>> bfs(vector<vector<float>> A, vector<float> b){
     // solves a lpp for basic feasible solutions written in standard form
 
     int m = A.size(), n = A[0].size();
@@ -72,9 +72,24 @@ vector<vector<float>> bfs(vector<vector<float>> A, vector<float> b, vector<float
             });
         }
 
+        // cout<<"A modified: "<<endl;
+        // print2d(A_mod);
+        // cout<<endl;
+
         // solve 
         // vector<float> soln_mod = gauss_seidel(A_mod, b);
-        vector<float> soln_mod = multiplyMatVec(inverse(A_mod), b);
+        vector<vector<float>> A_mod_inv = inverse(A_mod);
+
+        // cout<<"A mod inverse: "<<endl;
+        // print2d(A_mod_inv);
+        // cout<<endl;
+
+        if(A_mod_inv.size() == 0){
+            cout<<"underdetermined system of equations"<<endl;
+            continue;
+        }
+        vector<float> soln_mod = multiplyMatVec(A_mod_inv, b);
+
         
         reverse(indices.begin(), indices.end());
         // re-insert non-basic variables
@@ -90,10 +105,6 @@ vector<vector<float>> bfs(vector<vector<float>> A, vector<float> b, vector<float
                 break;
             }
         }
-        for(float v : soln_mod){
-            cout<<v<<" ";
-        }
-        cout<<endl;
         if(flag) solns.push_back(soln_mod);
     }
 
@@ -101,41 +112,47 @@ vector<vector<float>> bfs(vector<vector<float>> A, vector<float> b, vector<float
 }
 
 int main(){
-    int n=2, m=3;
-    vector<vector<float>> A{{3, 5}, {0, 1}, {8, 5}};
-    vector<float> b{150, 20, 300};
-    vector<float> c{50, 40};
+    int n, m;
+    vector<vector<float>> A;
+    vector<float> b;
+    vector<float> c;
 
-    // cout<<"Enter number of decision variables: "<<endl;;
-    // cin>>n;
-    // cout<<"Enter number of functional constraints: "<<endl;;
-    // cin>>m;
-    // cout<<"Enter the inequation matrix A (of dimensions "<<m<<" x "<<n<<" ): "<<endl;;
-    // float val;
-    // for(int i = 0; i < m; i++){
-    //     vector<float> row(n, 0);
-    //     A.push_back(row);
-    //     for(int j = 0; j < n; j++){
-    //         cin >> val;
-    //         A[i][j] = val;
-    //     }
-    // }
-    // cout<<"Enter the inequation vector b: "<<endl;;
-    // for(int i = 0; i < m; i++){
-    //     cin >> val;
-    //     b.push_back(val);
-    // }
-    // cout<<"Enter objective vector: "<<endl;
-    // for(int i = 0; i < m; i++){
-    //     cin >> val;
-    //     c.push_back(val);
-    // }
-
-    vector<vector<float>> solns = bfs(A, b, c);
-    for(vector<float> soln : solns){
-        for(float v : soln){
-            cout<<v<<" ";
+    cout<<"Enter number of decision variables: "<<endl;;
+    cin>>n;
+    cout<<"Enter number of functional constraints: "<<endl;;
+    cin>>m;
+    cout<<"Enter the inequation matrix A (of dimensions "<<m<<" x "<<n<<" ): "<<endl;;
+    float val;
+    for(int i = 0; i < m; i++){
+        vector<float> row(n, 0);
+        A.push_back(row);
+        for(int j = 0; j < n; j++){
+            cin >> val;
+            A[i][j] = val;
         }
-        cout<<endl;
     }
+    cout<<"Enter the inequation vector b: "<<endl;;
+    for(int i = 0; i < m; i++){
+        cin >> val;
+        b.push_back(val);
+    }
+    cout<<"Enter objective vector: "<<endl;
+    for(int i = 0; i < m; i++){
+        cin >> val;
+        c.push_back(val);
+    }
+
+    vector<vector<float>> solns = bfs(A, b);
+
+    cout<<endl<<"basic feasible solutions: "<<endl<<endl;
+    for(vector<float> soln : solns){
+        cout<<"solution: "<<"[";
+        for(float v : soln){
+            cout<<v<<", ";
+        }
+        cout<<"] "<<endl;
+        cout<<"value of objective function: "<<dot(c, soln)<<endl<<endl;
+    }
+
+    return 0;
 }
