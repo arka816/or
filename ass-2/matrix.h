@@ -30,9 +30,9 @@ vector<vector<float>> multiplyMatMat(vector<vector<float>> A, vector<vector<floa
 
     for(i = 0; i < mA; i++){
         for(j = 0; j < nB; j++){
-            sum = 0;
+            sum = 0.0;
             for(k = 0; k < nA; k++){
-                sum += A[i][k] * B[k][j];
+                sum += (float)(A[i][k] * B[k][j]);
             }
             prod[i][j] = sum;
         }

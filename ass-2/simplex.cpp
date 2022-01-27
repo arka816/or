@@ -10,7 +10,7 @@ void print1d(vector<int> a){
 }
 
 
-float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
+void simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
     int m = A.size(), n = A[0].size();
 
     int i, j;
@@ -39,14 +39,14 @@ float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
 
     vector<vector<float>> A_curr(A);
     vector<float> b_curr(b);
-    vector<float> c_curr(c);
+    vector<float> c_curr(mulScalar(c, -1));
 
     int iterations = 0;
 
     while(true){
         // update basic variables
         // decide entering variable
-        cout<<"iteration: "<<++iterations<<endl<<endl;
+        cout<<"-----iteration: "<<++iterations<<"-----"<<endl<<endl;
 
         int entering = 0;
         float min_c = c_curr[0];
@@ -66,8 +66,8 @@ float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         float min_ratio = FLT_MAX, ratio;
 
         for(j = 0; j < m; j++){
-            if(b_curr[j] >= 0 && A_curr[j][leaving] > 0){
-                ratio = (float)(b_curr[j] / A_curr[j][leaving]);
+            if(b_curr[j] >= 0 && A_curr[j][entering] > 0){
+                ratio = (float)(b_curr[j] / A_curr[j][entering]);
                 if(ratio < min_ratio){
                     min_ratio = ratio;
                     leaving = j;
@@ -89,7 +89,7 @@ float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         for(i = 0; i < m; i++){
             vector<float> row;
             for(int j : bv){
-                row.push_back(A_curr[i][j]);
+                row.push_back(A[i][j]);
             }
             B.push_back(row);
         }
@@ -97,13 +97,13 @@ float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         c_B.clear();
         // construct c_B
         for(int j : bv){
-            c_B.push_back(-1 * c_curr[j]);
+            c_B.push_back(c[j]);
         }
 
         B_inv = inverse(B);
         A_curr = multiplyMatMat(B_inv, A);
         b_curr = multiplyMatVec(B_inv, b);
-        c_curr = addVec(c, multiplyVecMat(c_B, A_curr));
+        c_curr = addVec(mulScalar(c, -1), multiplyVecMat(c_B, A_curr));
         opt = dot(c_B, b_curr);
 
         cout<<"A (curr): "<<endl;
@@ -128,14 +128,21 @@ float simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         if(flag) break;
     }
 
-    return opt;
+    cout<<"----- Result -----"<<endl;
+    for(int i = 0; i < bv.size(); i++){
+        int index = bv[i];
+        if(index < n){
+            cout<<"value of x"<<index+1<<": "<<b_curr[i]<<endl;
+        }
+    }
+    cout<<endl<<"final optimum value: "<<opt<<endl;
 }
 
 int main(){
     int n, m;
     vector<vector<float>> A{{3, 5}, {0, 1}, {8, 5}};
     vector<float> b{150, 20, 300};
-    vector<float> c{-50, -40};
+    vector<float> c{50, 40};
 
     // cout<<"Enter number of decision variables: "<<endl;;
     // cin>>n;
@@ -162,6 +169,5 @@ int main(){
     //     c.push_back(val);
     // }
 
-    float optimum = simplex(A, b, c);
-    cout<<optimum<<endl;
+    simplex(A, b, c);
 }
