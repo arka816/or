@@ -6,8 +6,8 @@
 */
 
 #include <bits/stdc++.h>
-#include "gauss-seidel.h"
-#include "matrix.h"
+#include "../headers/gauss-seidel.h"
+#include "../headers/matrix.h"
 
 using namespace std;
 

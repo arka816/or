@@ -3,20 +3,23 @@
 
 using namespace std;
 
-void print1d(vector<float> b){
-    for(float v : b) cout<<v<<" ";
+template <typename T>
+void print1d(vector<T> b){
+    for(T v : b) cout<<v<<" ";
     cout<<endl;
 }
 
-void print2d(vector<vector<float>> A){
-    for(vector<float> row : A){
-        for(float v : row){
+template <typename T>
+void print2d(vector<vector<T>> A){
+    for(vector<T> row : A){
+        for(T v : row){
             cout<<v<<" ";
         }
         cout<<endl;
     }
     cout<<endl;
 }
+
 
 vector<vector<float>> multiplyMatMat(vector<vector<float>> A, vector<vector<float>> B){
     int mA = A.size(), nA = A[0].size();

@@ -1,14 +1,16 @@
+/*
+    *** Standard Form simplex
+    1. maximization problem
+    2. functional constraints have to be <= / < type
+    3. rhs of all functional constraints have to be non-negative
+    4. non-negativity of all decision variables
+*/
+
 #include <bits/stdc++.h>
 #include <algorithm>
-#include "matrix.h"
+#include "../headers/matrix.h"
 
 using namespace std;
-
-void print1d(vector<int> a){
-    for(int v : a) cout<<v<<" ";
-    cout<<endl;
-}
-
 
 void simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
     int m = A.size(), n = A[0].size();
@@ -81,7 +83,7 @@ void simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         bv.push_back(entering);
 
         cout<<"basic variables: ";
-        print1d(bv);
+        print1d<int>(bv);
         cout<<endl;
 
         B.clear();
@@ -110,10 +112,10 @@ void simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
         print2d(A_curr);
         cout<<endl;
         cout<<"b (curr): "<<endl;
-        print1d(b_curr);
+        print1d<float>(b_curr);
         cout<<endl;
         cout<<"c (curr): "<<endl;
-        print1d(c_curr);
+        print1d<float>(c_curr);
         cout<<endl;
         cout<<"optimum: "<<opt<<"\n\n\n\n";
 
@@ -140,34 +142,35 @@ void simplex(vector<vector<float>> A, vector<float> b, vector<float> c){
 
 int main(){
     int n, m;
-    vector<vector<float>> A{{3, 5}, {0, 1}, {8, 5}};
-    vector<float> b{150, 20, 300};
-    vector<float> c{50, 40};
 
-    // cout<<"Enter number of decision variables: "<<endl;;
-    // cin>>n;
-    // cout<<"Enter number of functional constraints: "<<endl;;
-    // cin>>m;
-    // cout<<"Enter the inequation matrix A (of dimensions "<<m<<" x "<<n<<" ): "<<endl;;
-    // float val;
-    // for(int i = 0; i < m; i++){
-    //     vector<float> row(n, 0);
-    //     A.push_back(row);
-    //     for(int j = 0; j < n; j++){
-    //         cin >> val;
-    //         A[i][j] = val;
-    //     }
-    // }
-    // cout<<"Enter the inequation vector b: "<<endl;;
-    // for(int i = 0; i < m; i++){
-    //     cin >> val;
-    //     b.push_back(val);
-    // }
-    // cout<<"Enter objective vector: "<<endl;
-    // for(int i = 0; i < m; i++){
-    //     cin >> val;
-    //     c.push_back(val);
-    // }
+    vector<vector<float>> A;//{{3, 5}, {0, 1}, {8, 5}};
+    vector<float> b;//{150, 20, 300};
+    vector<float> c;//{50, 40};
+
+    cout<<"Enter number of decision variables: "<<endl;;
+    cin>>n;
+    cout<<"Enter number of functional constraints: "<<endl;;
+    cin>>m;
+    cout<<"Enter the inequation matrix A (of dimensions "<<m<<" x "<<n<<" ): "<<endl;;
+    float val;
+    for(int i = 0; i < m; i++){
+        vector<float> row(n, 0);
+        A.push_back(row);
+        for(int j = 0; j < n; j++){
+            cin >> val;
+            A[i][j] = val;
+        }
+    }
+    cout<<"Enter the inequation vector b: "<<endl;;
+    for(int i = 0; i < m; i++){
+        cin >> val;
+        b.push_back(val);
+    }
+    cout<<"Enter objective vector: "<<endl;
+    for(int i = 0; i < m; i++){
+        cin >> val;
+        c.push_back(val);
+    }
 
     simplex(A, b, c);
 }
